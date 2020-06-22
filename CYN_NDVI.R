@@ -211,6 +211,14 @@ difference <- (FL020b - FL016b)
  ## Error in compareRaster(e1, e2, extent = FALSE, rowcol = FALSE, crs = TRUE,  : 
   ## different resolution
 
+## crop and change resolution of FL020
+FL020_crop <- crop(FL020b, FL016b)
+plot(FL020_crop)
+
+res(FL020_crop) <- c(9.53e-07, 3.42e-07)
+
+difference <- (FL020_crop - FL016b)
+
 plot(difference)
 
 
