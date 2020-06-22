@@ -235,7 +235,9 @@ difference <- (FL020b - FL016b)
 FL020_crop <- crop(FL020b, FL016b)
 plot(FL020_crop)
 
-FL020_crop2 <- resample(FL020_crop, FL016b)
+FL020_crop2 <- resample(FL020_crop, FL016b) ## needed to resample the plot to change the resolution
+                                            ## for the subtraction of rasters to work 
+                                            ## both rasters needed to have the same resolution 
 
 difference <- FL020_crop2 - FL016b
 
@@ -260,7 +262,20 @@ plot(FL020b,
      ylab = "Latitude")
 dev.off()
 
-hist(difference)
+hist(difference, 
+     maxpixels = 100000,
+     main = "Histogram of NDVI Value Differences", 
+     xlab = "NDVI difference", 
+     col = "lightblue")
+
+
+
+
+
+
+
+
+
 
 
 
