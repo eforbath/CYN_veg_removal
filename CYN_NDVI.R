@@ -40,7 +40,8 @@ plot(FL020b)
 ### maybe try this one
 ## "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 
-hist(FL020b)
+hist(FL016b)
+hist(FL020b, add = TRUE)
 
 ## extracting values from GPS points
 GPS <- na.omit(read.csv("CYN_plot_centers.csv") )
@@ -199,6 +200,22 @@ lm <- lm(FL020_ndvi ~ treatment, data = ndvi)
 summary(lm)
 aov <- aov(FL020_ndvi ~ treatment, data = ndvi)
 summary(aov)
+
+## subtract pre- and post- + linear regression 
+ndvi$ndvi_diff <- (ndvi$FL016_ndvi - ndvi$FL020_ndvi)
+lm <- lm(ndvi_diff ~ treatment, data = ndvi)
+summary(lm)
+
+## subtracting pre- and post-clipping rasters 
+difference <- (FL020b - FL016b)
+ ## Error in compareRaster(e1, e2, extent = FALSE, rowcol = FALSE, crs = TRUE,  : 
+  ## different resolution
+
+plot(difference)
+
+
+
+
 
 
 
