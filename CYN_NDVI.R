@@ -37,11 +37,23 @@ FL020b <- projectRaster(FL020, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +n
 FL020b
 plot(FL020b)
 
-### maybe try this one
-## "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 
-hist(FL016b)
-hist(FL020b, add = TRUE)
+##histogram of pre/post NDVI values
+
+c1 <- rgb(173,216,230,max = 255, alpha = 80, names = "lt.blue")
+c2 <- rgb(255,192,203, max = 255, alpha = 80, names = "lt.pink")
+
+jpeg("ndvi_hist.jpg")
+hist(FL016b,
+     main = "Histogram of NDVI Values",
+     xlab = "NDVI",
+     ylab = "Frequency",
+     xlim = c(-0.5, 1),
+     ylim = c(0, 20000),
+     col = c1)
+hist(FL020b, col = c2, add = TRUE)
+legend("top", legend = c("pre-clipping", "post-clipping"), fill = c(c1, c2))
+dev.off()
 
 ## extracting values from GPS points
 GPS <- na.omit(read.csv("CYN_plot_centers.csv") )
@@ -127,6 +139,8 @@ ndvi_SH <- subset(ndvi, treatment == "SH")
 ndvi_GS <- subset(ndvi, treatment == "GS")
 
 ## control ##
+
+jpeg("barplot_control.jpg")
 barplot(cbind(FL016_ndvi, FL020_ndvi) ~ plot, 
         ndvi_CT,
         beside = TRUE,
@@ -140,9 +154,10 @@ mtext("Plot", side = 1, line = 5, cex = 1.2)
 legend("topright", 
        legend = c("pre-clipping", "post-clipping"),
        fill = c("light green", "orange"))
-
+dev.off()
 
 ## grass ##
+jpeg("barplot_grass.jpg")
 barplot(cbind(FL016_ndvi, FL020_ndvi) ~ plot, 
         ndvi_GR,
         beside = TRUE,
@@ -156,8 +171,10 @@ mtext("Plot", side = 1, line = 5, cex = 1.2)
 legend("topright", 
        legend = c("pre-clipping", "post-clipping"),
        fill = c("light green", "orange"))
+dev.off()
 
 ## shrub ##
+jpeg("barplot_shrub.jpg")
 barplot(cbind(FL016_ndvi, FL020_ndvi) ~ plot, 
         ndvi_SH,
         beside = TRUE,
@@ -171,9 +188,11 @@ mtext("Plot", side = 1, line = 5, cex = 1.2)
 legend("topright", 
        legend = c("pre-clipping", "post-clipping"),
        fill = c("light green", "orange"))
+dev.off()
 
 
 ## grass and shrub ##
+jpeg("barplot_both.jpg")
 barplot(cbind(FL016_ndvi, FL020_ndvi) ~ plot, 
         ndvi_GS,
         beside = TRUE,
@@ -187,6 +206,7 @@ mtext("Plot", side = 1, line = 5, cex = 1.2)
 legend("topright", 
        legend = c("pre-clipping", "post-clipping"),
        fill = c("light green", "orange"))
+dev.off()
 
 
 
@@ -240,10 +260,7 @@ plot(FL020b,
      ylab = "Latitude")
 dev.off()
 
-
-
-
-
+hist(difference)
 
 
 
