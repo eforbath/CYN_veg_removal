@@ -215,12 +215,11 @@ difference <- (FL020b - FL016b)
 FL020_crop <- crop(FL020b, FL016b)
 plot(FL020_crop)
 
-FL020_crop2 <- disaggregate(FL020_crop,fact = c(0.000000953, 0.000000342))
+FL020_crop2 <- aggregate(FL020_crop,fact = c(0.000000953, 0.000000342))
+FL020_crop2 <- resample(FL020_crop, FL016b)
 
-dim(FL020_crop) <- c(0.000000953, 0.000000342)
-resample(FL020_crop, FL020b, method = "bilinear")
+difference <- FL020_crop2 - FL016b
 
-difference <- FL020b - FL016b
 
 plot(difference)
 
