@@ -219,9 +219,26 @@ FL020_crop2 <- resample(FL020_crop, FL016b)
 
 difference <- FL020_crop2 - FL016b
 
+jpeg("ndvi_diff.jpg")
+plot(difference, 
+     main = "Raster of NDVI Difference (FL020 - FL016)", 
+     xlab = "Longitude", 
+     ylab = "Latitude")
+dev.off()
 
-plot(difference)
+jpeg("pre-ndvi.jpg")
+plot(FL016b, 
+     main = "Pre-Clipping NDVI", 
+     xlab = "Longitude", 
+     ylab = "Latitude")
+dev.off()
 
+jpeg("post-ndvi.jpg")
+plot(FL020b, 
+     main = "Post-Clipping NDVI)", 
+     xlab = "Longitude", 
+     ylab = "Latitude")
+dev.off()
 
 
 
