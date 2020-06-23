@@ -72,8 +72,9 @@ GPS_order2 <- SpatialPoints(GPS_order,
                             proj4string = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
 
 ## actually extract NDVI values from each flight 
-ndvi_FL016 <- extract(FL016b, GPS_order2, 
-                      method = 'bilinear',
+ndvi_FL016 <- extract(FL016b, GPS_order2,
+                      buffer = 0.25,
+                      fun = mean,
                       df = TRUE, 
                       along = TRUE, 
                       sp = TRUE)
@@ -83,7 +84,8 @@ ndvi_FL016b <- as.data.frame(ndvi_FL016)
 
 ndvi_FL020 <- extract(FL020b, 
                       GPS_order2,
-                      method = 'bilinear', 
+                      buffer = 0.25,
+                      fun = mean,
                       df = TRUE,
                       along = TRUE,
                       sp = TRUE)
@@ -222,7 +224,7 @@ aov <- aov(FL020_ndvi ~ treatment, data = ndvi)
 summary(aov)
 
 ## subtract pre- and post- + linear regression 
-ndvi$ndvi_diff <- (ndvi$FL016_ndvi - ndvi$FL020_ndvi)
+ndvi$ndvi_diff <- (ndvi$FL020_ndvi - ndvi$FL016_ndvi)
 lm <- lm(ndvi_diff ~ treatment, data = ndvi)
 summary(lm)
 
