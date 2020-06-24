@@ -56,7 +56,7 @@ legend("top", legend = c("pre-clipping", "post-clipping"), fill = c(c1, c2))
 dev.off()
 
 ## extracting values from GPS points
-GPS <- na.omit(read.csv("CYN_plot_centers.csv") )
+GPS <- na.omit(read.csv("CYN_plot_centers.csv"))
 
 GPS2 <- subset(GPS, select= -c(plot, elevation))
 
@@ -218,6 +218,9 @@ summary(lm)
 aov <- aov(FL016_ndvi ~ treatment, data = ndvi) 
 summary(aov)
 
+
+
+
 lm <- lm(FL020_ndvi ~ treatment, data = ndvi)
 summary(lm)
 aov <- aov(FL020_ndvi ~ treatment, data = ndvi)
@@ -227,6 +230,7 @@ summary(aov)
 ndvi$ndvi_diff <- (ndvi$FL020_ndvi - ndvi$FL016_ndvi)
 lm <- lm(ndvi_diff ~ treatment, data = ndvi)
 summary(lm)
+
 
 ## subtracting pre- and post-clipping rasters 
 difference <- (FL020b - FL016b)
@@ -243,6 +247,7 @@ FL020_crop2 <- resample(FL020_crop, FL016b) ## needed to resample the plot to ch
 
 difference <- FL020_crop2 - FL016b
 
+## plot and export difference raster
 jpeg("ndvi_diff.jpg")
 plot(difference, 
      main = "Raster of NDVI Difference (FL020 - FL016)", 
@@ -250,6 +255,7 @@ plot(difference,
      ylab = "Latitude")
 dev.off()
 
+### plot and export rasters of pre/post clipping
 jpeg("pre-ndvi.jpg")
 plot(FL016b, 
      main = "Pre-Clipping NDVI", 
@@ -264,6 +270,7 @@ plot(FL020b,
      ylab = "Latitude")
 dev.off()
 
+## histogram of difference?
 hist(difference, 
      maxpixels = 100000,
      main = "Histogram of NDVI Value Differences", 
@@ -271,10 +278,16 @@ hist(difference,
      col = "lightblue")
 
 
+###### biomass removal vs ndvi difference #######
+#### NOTE: this is just a basis for what the code may look 
+#### will be modified when biomass removal data is recieved
 
+bio_removal <- na.omit(read.csv("biomass_removal.csv"))
 
+ndvi <- merge(ndvi, bio_removal, by = c("plot"))
 
-
+lm <- lm(weights ~ plot, data = bio_removal)
+summary(lm)
 
 
 
