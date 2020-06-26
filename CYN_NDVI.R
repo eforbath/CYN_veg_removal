@@ -320,6 +320,33 @@ abline(lm)
 percent_cover <- na.omit(read.csv("percent_cover.csv"))
 names(percent_cover)[names(percent_cover) == "Plot.ID"] <- "plot"
 
+## aggregate data by functional group
+percent_cover2 <- aggregate(percent_cover$percent.cover, 
+                 by = list(percent_cover$plot, percent_cover$Functional.group), 
+                 FUN = sum)
+names(percent_cover2)[names(percent_cover2) == "Group.1"] <- "plot"
+names(percent_cover2)[names(percent_cover2) == "Group.2"] <- "functional_group"
+names(percent_cover2)[names(percent_cover2) == "x"] <- "percent_cover"
+
+con <- subset(percent_cover, Functional.group == "CON")
+evsh <- subset(percent_cover, Functional.group == "EVSH")
+desh <- subset(percent_cover, Functional.group == "DESH")
+gram <- subset(percent_cover, Functional.group == "GRAM")
+forb <- subset(percent_cover, Functional.group == "FORB")
+cwd <- subset(percent_cover, Functional.group == "CWD")
+moss <- subset(percent_cover, Functional.group == "MOSS")
+lichen <- subset(percent_cover, Functional.group == "LICH")
+brg <- subset(percent_cover, Functional.group == "BRG")
+litr <- subset(percent_cover, Functional.group == "LITR")
+equ <- subset(percent_cover, Functional.group == "EQU")
+
+ndvi_con <- merge(ndvi, con, by = c("plot"))
+
+
+
+
+
+
 
 
 
