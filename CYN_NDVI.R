@@ -282,8 +282,6 @@ hist(difference,
 
 
 ###### biomass removal vs ndvi difference #######
-#### NOTE: this is just a basis for what the code may look 
-#### will be modified when biomass removal data is recieved
 
 bio_removal <- na.omit(read.csv("CYN_bio_removal.csv"))
 names(bio_removal)[names(bio_removal) == "Plot.ID"] <- "plot"
@@ -312,10 +310,15 @@ summary(lm)
 plot(bio_removed ~ ndvi_diff, data = ndvi_br, 
      xlab = "NDVI Difference", 
      ylab = "Biomass Removed", 
-     pch = 19)
+     pch = 19, 
+     col = "red")
 abline(lm)
 
 
+
+##### percent cover #####
+percent_cover <- na.omit(read.csv("percent_cover.csv"))
+names(percent_cover)[names(percent_cover) == "Plot.ID"] <- "plot"
 
 
 
