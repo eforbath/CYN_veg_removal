@@ -334,30 +334,41 @@ pc_GR <- subset(percent_cover, Treatment == "GR")
 pc_SH <- subset(percent_cover, Treatment == "SH")
 pc_GS <- subset(percent_cover, Treatment == "G+S")
 
-
+par(xpd = T, mar = par()$mar + c(0,0,0,15))
 barplot(percent.cover ~ Functional.group + plot,
         data = pc_GR,
-        ylim = c(0, 150), 
+        main = "Percent Cover by Functional Group (Grass Treatment)", 
+        xlab = "Plot", 
+        ylab = "Percent Cover",
+        ylim = c(0, 120), 
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
-legend("right", c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+legend(11, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                      "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
-                "purple", "pink", "brown"))
+                "purple", "pink", "brown"), cex = 0.75)
+
 
 barplot(percent.cover ~ Functional.group + plot,
         data = pc_SH,
-        ylim = c(0, 150), 
+        main = "Percent Cover by Functional Group (Shrub Treatment)", 
+        xlab = "Plot", 
+        ylab = "Percent Cover",
+        ylim = c(0, 120), 
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
-legend("right", c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+legend("right",inset=c(-0.2,0), c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                   "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
-                "purple", "pink", "brown"))
+                "purple", "pink", "brown"), 
+       xpd = TRUE)
 
 barplot(percent.cover ~ Functional.group + plot,
         data = pc_GS,
-        ylim = c(0, 150), 
+        main = "Percent Cover by Functional Group (Grass+Shrub Treatment)", 
+        xlab = "Plot", 
+        ylab = "Percent Cover",
+        ylim = c(0, 120), 
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
 legend("right", c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
@@ -380,10 +391,6 @@ litr <- subset(percent_cover, Functional.group == "LITR")
 equ <- subset(percent_cover, Functional.group == "EQU")
 
 ndvi_con <- merge(ndvi, con, by = c("plot"))
-
-
-ggplot(data, aes(fill=condition, y=value, x=specie)) + 
-  geom_bar(position="stack", stat="identity")
 
 
 
