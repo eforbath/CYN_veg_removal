@@ -94,7 +94,10 @@ ndvi_FL020b <- as.data.frame(ndvi_FL020)
 
 ## plot of data points on ndvi maps
 
-plot(FL016b)
+plot(FL016b, 
+     main = "Pre-Clipping NDVI", 
+     xlab = "Longitude", 
+     ylab = "Latitude")
 points(GPS_order$longitude, GPS_order$latitude, pch=20)
 
 plot(FL020b)
@@ -282,12 +285,37 @@ hist(difference,
 #### NOTE: this is just a basis for what the code may look 
 #### will be modified when biomass removal data is recieved
 
-bio_removal <- na.omit(read.csv("biomass_removal.csv"))
+bio_removal <- na.omit(read.csv("CYN_bio_removal.csv"))
+names(bio_removal)[names(bio_removal) == "Plot.ID"] <- "plot"
 
-ndvi <- merge(ndvi, bio_removal, by = c("plot"))
+ndvi2 <- sub("P", " " , ndvi$plot) ## take out "P" in all plot numbers
+ndvi$plot = gsub("P", "",ndvi$plot )
 
-lm <- lm(weights ~ plot, data = bio_removal)
+
+bio_removal2 <- aggregate(bio_removal$BIOMASS..g., by = list(plot=bio_removal$plot), FUN = sum)
+names(bio_removal2)[names(bio_removal2) == "x"] <- "bio_removed"
+
+
+ndvi_br <- na.omit(merge(ndvi, bio_removal2, by = c("plot"), all.x = TRUE, all.y = TRUE)) 
+
+barplot(bio_removed ~ plot, data = ndvi_br,
+     main = "Biomass Removed by Plot",
+     xlab = "Plot", 
+     ylab = "Biomass Removed (g)", 
+     ylim = c(0,600), 
+     col = "lightgreen")
+
+lm <- lm(bio_removed ~ ndvi_diff, data = ndvi_br)
 summary(lm)
+
+
+plot(bio_removed ~ ndvi_diff, data = ndvi_br, 
+     xlab = "NDVI Difference", 
+     ylab = "Biomass Removed", 
+     pch = 19)
+abline(lm)
+
+
 
 
 
