@@ -328,6 +328,45 @@ names(percent_cover2)[names(percent_cover2) == "Group.1"] <- "plot"
 names(percent_cover2)[names(percent_cover2) == "Group.2"] <- "functional_group"
 names(percent_cover2)[names(percent_cover2) == "x"] <- "percent_cover"
 
+
+## subset by treatment 
+pc_GR <- subset(percent_cover, Treatment == "GR")
+pc_SH <- subset(percent_cover, Treatment == "SH")
+pc_GS <- subset(percent_cover, Treatment == "G+S")
+
+
+barplot(percent.cover ~ Functional.group + plot,
+        data = pc_GR,
+        ylim = c(0, 150), 
+        col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+legend("right", c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+                     "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
+       fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+
+barplot(percent.cover ~ Functional.group + plot,
+        data = pc_SH,
+        ylim = c(0, 150), 
+        col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+legend("right", c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+                  "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
+       fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+
+barplot(percent.cover ~ Functional.group + plot,
+        data = pc_GS,
+        ylim = c(0, 150), 
+        col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+legend("right", c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+                  "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
+       fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+
+
+## need this???
 con <- subset(percent_cover, Functional.group == "CON")
 evsh <- subset(percent_cover, Functional.group == "EVSH")
 desh <- subset(percent_cover, Functional.group == "DESH")
@@ -343,7 +382,8 @@ equ <- subset(percent_cover, Functional.group == "EQU")
 ndvi_con <- merge(ndvi, con, by = c("plot"))
 
 
-
+ggplot(data, aes(fill=condition, y=value, x=specie)) + 
+  geom_bar(position="stack", stat="identity")
 
 
 
