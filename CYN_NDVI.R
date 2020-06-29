@@ -334,15 +334,17 @@ pc_GR <- subset(percent_cover, Treatment == "GR")
 pc_SH <- subset(percent_cover, Treatment == "SH")
 pc_GS <- subset(percent_cover, Treatment == "G+S")
 
-par(xpd = T, mar = par()$mar + c(0,0,0,15))
+par(xpd = T, mar = par()$mar + c(0,0,0,9))
 barplot(percent.cover ~ Functional.group + plot,
         data = pc_GR,
-        main = "Percent Cover by Functional Group (Grass Treatment)", 
         xlab = "Plot", 
         ylab = "Percent Cover",
-        ylim = c(0, 120), 
+        ylim = c(0, 120),
+        las = 2,
+        cex.names = 0.85,
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
+title("Percent Cover by Functional Group (Grass Treatment)", adj = 0.05, line = 1.5)
 legend(11, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                      "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
@@ -351,27 +353,30 @@ legend(11, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", 
 
 barplot(percent.cover ~ Functional.group + plot,
         data = pc_SH,
-        main = "Percent Cover by Functional Group (Shrub Treatment)", 
         xlab = "Plot", 
         ylab = "Percent Cover",
         ylim = c(0, 120), 
+        las = 2,
+        cex.names = 0.75,
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
-legend("right",inset=c(-0.2,0), c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+title("Percent Cover by Functional Group (Shrub Treatment)", adj = 0.05, line = 1.5)
+legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                   "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
-                "purple", "pink", "brown"), 
-       xpd = TRUE)
+                "purple", "pink", "brown"))
 
 barplot(percent.cover ~ Functional.group + plot,
         data = pc_GS,
-        main = "Percent Cover by Functional Group (Grass+Shrub Treatment)", 
         xlab = "Plot", 
         ylab = "Percent Cover",
         ylim = c(0, 120), 
+        las = 2,
+        cex.names = 0.75,
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
-legend("right", c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+title("Percent Cover by Functional Group (Grass+Shrub Treatment)", adj = 0.05, line = 1.5)
+legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                   "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
