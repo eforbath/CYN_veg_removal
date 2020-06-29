@@ -305,11 +305,11 @@ barplot(bio_removed ~ plot, data = ndvi_br,
 
 lm <- lm(bio_removed ~ ndvi_diff, data = ndvi_br)
 summary(lm)
-
+anova(lm)
 
 plot(bio_removed ~ ndvi_diff, data = ndvi_br, 
      xlab = "NDVI Difference", 
-     ylab = "Biomass Removed", 
+     ylab = "Biomass Removed (g)", 
      pch = 19, 
      col = "red")
 abline(lm)
@@ -426,10 +426,16 @@ equ <- subset(percent_cover, Functional.group == "EQU")
 
 ndvi_con <- merge(ndvi, con, by = c("plot"))
 
+### does change in NDVI correlate with veg type (ie does NDVI inc/dec with specific veg types)
+pc_br <- merge(percent_cover, ndvi, by = c("plot"))
+pc_br2 <- merge(pc_br, bio_removal, by = c("plot"))
+  
+con <- subset(pc_br, Functional.group == "CON")
+plot(FL016_ndvi ~ percent.cover, data = con)
+abline(lm)
 
-
-
-
+lm <- lm(FL016_ndvi ~ percent.cover, data = con)
+summary(lm)
 
 
 
