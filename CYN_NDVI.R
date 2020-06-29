@@ -355,15 +355,6 @@ barplot(percent.cover ~ Functional.group + plot,
         cex.names = 0.85,
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
-par(new = TRUE)
-barplot(FL016_ndvi ~ plot, 
-        data = ndvi_GR, 
-        axes = FALSE,
-        xaxt = "n", yaxt = "n",
-        space = .5,
-        col = "black")
-axis(side = 4, at = pretty(range(FL016_ndvi)))
-mtext("NDVI", side = 4, line = 3)
 title("Percent Cover by Functional Group (Grass Treatment)", adj = 0.05, line = 1.5)
 legend(11, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                      "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
@@ -398,6 +389,24 @@ barplot(percent.cover ~ Functional.group + plot,
 title("Percent Cover by Functional Group (Grass+Shrub Treatment)", adj = 0.05, line = 1.5)
 legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                   "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
+       fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+
+
+### bar plot with all plots and percent cover
+par(xpd = T, mar = par()$mar + c(0,0,0,10))
+barplot(percent.cover ~ Functional.group + plot,
+        data = percent_cover,
+        xlab = "Plot", 
+        ylab = "Percent Cover",
+        ylim = c(0, 120), 
+        las = 2,
+        cex.names = 0.75,
+        col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+title("Percent Cover by Functional Group", adj = 0.05, line = 1.5)
+legend(50, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+                    "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
 
