@@ -428,14 +428,163 @@ ndvi_con <- merge(ndvi, con, by = c("plot"))
 
 ### does change in NDVI correlate with veg type (ie does NDVI inc/dec with specific veg types)
 pc_br <- merge(percent_cover, ndvi, by = c("plot"))
-pc_br2 <- merge(pc_br, bio_removal, by = c("plot"))
-  
-con <- subset(pc_br, Functional.group == "CON")
-plot(FL016_ndvi ~ percent.cover, data = con)
-abline(lm)
 
+con <- subset(pc_br, Functional.group == "CON")
 lm <- lm(FL016_ndvi ~ percent.cover, data = con)
 summary(lm)
+
+plot(FL016_ndvi ~ percent.cover, 
+     data = con,
+     main = "NDVI vs Percent Cover (Conifers)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+ev <- subset(pc_br, Functional.group == "EVSH")
+lm <- lm(FL016_ndvi ~ percent.cover, data = ev)
+summary(lm)
+
+plot(FL016_ndvi ~ percent.cover, 
+     data = ev,
+     main = "NDVI vs Percent Cover (Evergreen Shrub)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+desh <- subset(pc_br, Functional.group == "DESH")
+lm <- lm(FL016_ndvi ~ percent.cover, data = desh)
+summary(lm)
+
+plot(FL016_ndvi ~ percent.cover, 
+     data = desh,
+     main = "NDVI vs Percent Cover (Deciduous Shrub)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+
+gram <- subset(pc_br, Functional.group == "GRAM")
+lm <- lm(FL016_ndvi ~ percent.cover, data = gram)
+summary(lm)
+
+plot(FL016_ndvi ~ percent.cover, 
+     data = gram,
+     main = "NDVI vs Percent Cover (Graminoid)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+forb <- subset(pc_br, Functional.group == "FORB")
+lm <- lm(FL016_ndvi ~ percent.cover, data = forb)
+summary(lm)
+
+plot(FL016_ndvi ~ percent.cover, 
+     data = forb,
+     main = "NDVI vs Percent Cover (Forb)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+cwd <- subset(pc_br, Functional.group == "CWD")
+lm <- lm(FL016_ndvi ~ percent.cover, data = cwd)
+summary(lm)
+
+plot(FL016_ndvi ~ percent.cover, 
+     data = cwd,
+     main = "NDVI vs Percent Cover (CWD)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+moss <- subset(pc_br, Functional.group == "MOSS")
+lm <- lm(FL016_ndvi ~ percent.cover, data = moss)
+summary(lm)
+
+plot(FL016_ndvi ~ percent.cover, 
+     data = moss,
+     main = "NDVI vs Percent Cover (Moss)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+lich <- subset(pc_br, Functional.group == "LICH")
+lm <- lm(FL016_ndvi ~ percent.cover, data = lich)
+summary(lm)
+
+plot(FL016_ndvi ~ percent.cover, 
+     data = lich,
+     main = "NDVI vs Percent Cover (Lichen)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+brg <- subset(pc_br, Functional.group == "BRG")
+lm <- lm(FL016_ndvi ~ percent.cover, data = brg)
+summary(lm)
+
+plot(FL016_ndvi ~ percent.cover, 
+     data = brg,
+     main = "NDVI vs Percent Cover (Bare Ground)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+### error : 
+## Error in int_abline(a = a, b = b, h = h, v = v, untf = untf, ...) : 
+##  'a' and 'b' must be finite
+
+
+litr <- subset(pc_br, Functional.group == "LITR")
+lm <- lm(FL016_ndvi ~ percent.cover, data = litr)
+summary(lm)
+
+plot(FL016_ndvi ~ percent.cover, 
+     data = litr,
+     main = "NDVI vs Percent Cover (Litter)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+equ <- subset(pc_br, Functional.group == "EQU")
+lm <- lm(FL016_ndvi ~ percent.cover, data = equ)
+summary(lm)
+
+plot(FL016_ndvi ~ percent.cover, 
+     data = equ,
+     main = "NDVI vs Percent Cover (Equisetum spp.)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
 
 
 
