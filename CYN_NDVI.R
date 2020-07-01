@@ -215,6 +215,7 @@ dev.off()
 
 
 
+
 ########### compare ndvi values by treatment (anova or lm??) ########### 
 lm <- lm(FL016_ndvi ~ treatment, data = ndvi)
 summary(lm)
@@ -281,6 +282,7 @@ hist(difference,
      col = "lightblue")
 
 
+
 ###### biomass removal vs ndvi difference #######
 
 bio_removal <- na.omit(read.csv("CYN_bio_removal.csv"))
@@ -313,6 +315,7 @@ plot(bio_removed ~ ndvi_diff, data = ndvi_br,
      pch = 19, 
      col = "red")
 abline(lm)
+
 
 
 
@@ -393,6 +396,8 @@ legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid"
                 "purple", "pink", "brown"))
 
 
+
+
 ########### bar plot with all plots and percent cover ###########  
 par(xpd = T, mar = par()$mar + c(0,0,0,10))
 barplot(percent.cover ~ Functional.group + plot,
@@ -411,7 +416,8 @@ legend(50, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", 
                 "purple", "pink", "brown"))
 
 
-########### subsetting by functional group ########### 
+
+######## subset percent cover by funtional group ########
 con <- subset(percent_cover, Functional.group == "CON")
 evsh <- subset(percent_cover, Functional.group == "EVSH")
 desh <- subset(percent_cover, Functional.group == "DESH")
@@ -571,7 +577,7 @@ plot(FL016_ndvi ~ percent.cover,
      pch = 19, 
      col = "darkgreen")
 abline(lm)
- ### statistically significant?!?!?!
+### statistically significant?!?!?!
 
 equ <- subset(pc_br, Functional.group == "EQU")
 lm <- lm(FL016_ndvi ~ percent.cover, data = equ)
@@ -587,13 +593,21 @@ plot(FL016_ndvi ~ percent.cover,
 abline(lm)
 
 
+
+
+
+
+
+
+
 ########### point intercept data ########### 
+## more accurate, all add up to 100%
 pt_int <- na.omit(read.csv("pt_intercept.csv"))
 
 treatments$plot = gsub("P", "", treatments$plot) ## remove all P from plots
-pt_int2 <- merge(treatments, pt_int, by = c("plot"))
+pt_int2 <- merge(treatments, pt_int, by = c("plot")) ## merge to add treaments for all plots
 
-point_CT <- subset(pt_int2, treatment == "CT")
+point_CT <- subset(pt_int2, treatment == "CT") ## Subset by treatments
 point_GR <- subset(pt_int2, treatment == "GR")
 point_SH <- subset(pt_int2, treatment == "SH")
 point_GS <- subset(pt_int2, treatment == "GS")
@@ -604,13 +618,13 @@ barplot(percent_composition ~ functional_groups + plot,
         data = point_CT,
         xlab = "Plot", 
         ylab = "Percent Cover",
-        ylim = c(0, 120),
+        ylim = c(0, 100),
         las = 2,
         cex.names = 0.85,
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
 title("Percent Cover by Functional Group (Control)", adj = 0.05, line = 1.5)
-legend(11, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                   "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"), cex = 0.75)
@@ -620,23 +634,23 @@ barplot(percent_composition ~ functional_groups + plot,
         data = point_GR,
         xlab = "Plot", 
         ylab = "Percent Cover",
-        ylim = c(0, 120),
+        ylim = c(0, 100),
         las = 2,
         cex.names = 0.85,
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
 title("Percent Cover by Functional Group (Grass Treatment)", adj = 0.05, line = 1.5)
-legend(11, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                   "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
-                "purple", "pink", "brown"), cex = 0.75)
+                "purple", "pink", "brown"))
 
 ## shrubs ##
 barplot(percent_composition ~ functional_groups + plot,
         data = point_SH,
         xlab = "Plot", 
         ylab = "Percent Cover",
-        ylim = c(0, 120), 
+        ylim = c(0, 100), 
         las = 2,
         cex.names = 0.75,
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
@@ -648,11 +662,11 @@ legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid"
                 "purple", "pink", "brown"))
 
 ## grass and shrubs ##
-barplot(percent.cover ~ Functional.group + plot,
-        data = pc_GS,
+barplot(percent_composition ~ functional_groups + plot,
+        data = point_GS,
         xlab = "Plot", 
         ylab = "Percent Cover",
-        ylim = c(0, 120), 
+        ylim = c(0, 100), 
         las = 2,
         cex.names = 0.75,
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
@@ -663,6 +677,157 @@ legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid"
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
 
+
+
+########### subset percent cover by functional group using POINT INTERCEPT DATA ########### 
+con <- subset(pt_int2, functional_groups == "CON")
+evsh <- subset(pt_int2, functional_groups == "EVSH")
+desh <- subset(pt_int2, functional_groups == "DESH")
+gram <- subset(pt_int2, functional_groups == "GRAM")
+forb <- subset(pt_int2, functional_groups == "FORB")
+cwd <- subset(pt_int2, functional_groups == "CWD")
+moss <- subset(pt_int2, functional_groups == "MOSS")
+lichen <- subset(pt_int2, functional_groups == "LICH")
+brg <- subset(pt_int2, functional_groups == "BRG")
+litr <- subset(pt_int2, functional_groups == "LITR")
+equ <- subset(pt_int2, functional_groups == "EQU")
+
+
+### does change in NDVI correlate with veg type (ie does NDVI inc/dec with specific veg types)
+point_ndvi <- merge(pt_int2, ndvi, by = c("plot"))
+
+con <- subset(point_ndvi, functional_groups == "CON")
+lm <- lm(FL016_ndvi ~ percent_composition, data = con)
+summary(lm)
+
+plot(FL016_ndvi ~ percent_composition, 
+     data = con,
+     main = "NDVI vs Percent Cover (Conifers)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+ev <- subset(point_ndvi, functional_groups == "EVSH")
+lm <- lm(FL016_ndvi ~ percent_composition, data = ev)
+summary(lm)
+
+plot(FL016_ndvi ~ percent_composition, 
+     data = ev,
+     main = "NDVI vs Percent Cover (Evergreen Shrub)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+desh <- subset(point_ndvi, functional_groups == "DESH")
+lm <- lm(FL016_ndvi ~ percent_composition, data = desh)
+summary(lm)
+
+plot(FL016_ndvi ~ percent_composition, 
+     data = desh,
+     main = "NDVI vs Percent Cover (Deciduous Shrub)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+
+gram <- subset(point_ndvi, functional_groups == "GRAM")
+lm <- lm(FL016_ndvi ~ percent_composition, data = gram)
+summary(lm)
+
+plot(FL016_ndvi ~ percent_composition, 
+     data = gram,
+     main = "NDVI vs Percent Cover (Graminoid)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+forb <-subset(point_ndvi, functional_groups == "FORB")
+lm <- lm(FL016_ndvi ~ percent_composition, data = forb)
+summary(lm)
+
+plot(FL016_ndvi ~ percent_composition, 
+     data = forb,
+     main = "NDVI vs Percent Cover (Forb)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+cwd <- subset(point_ndvi, functional_groups == "CWD")
+lm <- lm(FL016_ndvi ~ percent_composition, data = cwd)
+summary(lm)
+
+plot(FL016_ndvi ~ percent_composition, 
+     data = cwd,
+     main = "NDVI vs Percent Cover (CWD)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+#### skipped moss, no moss in point intercept data
+
+lich <- subset(point_ndvi, functional_groups == "LICH")
+lm <- lm(FL016_ndvi ~ percent_composition, data = lich)
+summary(lm)
+
+plot(FL016_ndvi ~ percent_composition, 
+     data = lich,
+     main = "NDVI vs Percent Cover (Lichen)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+
+
+brg <- subset(point_ndvi, functional_groups == "BRG") ### irrelevant bc all plots have 0% cover for brg
+lm <- lm(FL016_ndvi ~ percent_composition, data = brg)
+summary(lm)
+
+plot(FL016_ndvi ~ percent_composition, 
+     data = brg,
+     main = "NDVI vs Percent Cover (Bare Ground)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
+### error : 
+## Error in int_abline(a = a, b = b, h = h, v = v, untf = untf, ...) : 
+##  'a' and 'b' must be finite
+
+
+## no litter in point intercept data
+## very confused ##
+
+equ <- subset(point_ndvi, functional_groups == "EQU")
+lm <- lm(FL016_ndvi ~ percent_composition, data = equ)
+summary(lm)
+
+plot(FL016_ndvi ~ percent_composition, 
+     data = equ,
+     main = "NDVI vs Percent Cover (Equisetum spp.)",
+     xlab = "Percent Cover", 
+     ylab = "NDVI (pre-clipping)",
+     pch = 19, 
+     col = "darkgreen")
+abline(lm)
 
 
 
