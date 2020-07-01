@@ -1,4 +1,4 @@
-########### Cherkskiy North Veg Removal Plots #########3
+########### Cherkskiy North Veg Removal Plots ###########
 
 getwd()
 setwd("/Users/elenaforbath/Downloads/loranty_lab/data")
@@ -9,12 +9,12 @@ install.packages("ggplot2")
 library(dplyr)
 library(ggplot2)
 
-## NDVI analyses ##
+########### NDVI analyses########### 
 
 ## read in tiff file
 install.packages("tiff")
 install.packages("rtiff")
-install.packages("raster")
+install.packages("raster") 
 install.packages("sp")
 install.packages("rgdal")
 library(tiff)
@@ -38,7 +38,7 @@ FL020b
 plot(FL020b)
 
 
-##histogram of pre/post NDVI values
+## histogram of pre/post NDVI values
 
 c1 <- rgb(173,216,230,max = 255, alpha = 80, names = "lt.blue")
 c2 <- rgb(255,192,203, max = 255, alpha = 80, names = "lt.pink")
@@ -215,7 +215,7 @@ dev.off()
 
 
 
-## compare ndvi values by treatment (anova or lm??)
+########### compare ndvi values by treatment (anova or lm??) ########### 
 lm <- lm(FL016_ndvi ~ treatment, data = ndvi)
 summary(lm)
 aov <- aov(FL016_ndvi ~ treatment, data = ndvi) 
@@ -316,7 +316,7 @@ abline(lm)
 
 
 
-##### percent cover #####
+######### percent cover #########
 percent_cover <- na.omit(read.csv("percent_cover.csv"))
 names(percent_cover)[names(percent_cover) == "Plot.ID"] <- "plot"
 
@@ -393,7 +393,7 @@ legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid"
                 "purple", "pink", "brown"))
 
 
-### bar plot with all plots and percent cover
+########### bar plot with all plots and percent cover ###########  
 par(xpd = T, mar = par()$mar + c(0,0,0,10))
 barplot(percent.cover ~ Functional.group + plot,
         data = percent_cover,
@@ -411,7 +411,7 @@ legend(50, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", 
                 "purple", "pink", "brown"))
 
 
-## need this???
+########### subsetting by functional group ########### 
 con <- subset(percent_cover, Functional.group == "CON")
 evsh <- subset(percent_cover, Functional.group == "EVSH")
 desh <- subset(percent_cover, Functional.group == "DESH")
@@ -542,7 +542,7 @@ plot(FL016_ndvi ~ percent.cover,
 abline(lm)
 
 
-brg <- subset(pc_br, Functional.group == "BRG")
+brg <- subset(pc_br, Functional.group == "BRG") ### irrelevant bc all plots have 0% cover for brg
 lm <- lm(FL016_ndvi ~ percent.cover, data = brg)
 summary(lm)
 
@@ -571,7 +571,7 @@ plot(FL016_ndvi ~ percent.cover,
      pch = 19, 
      col = "darkgreen")
 abline(lm)
-
+ ### statistically significant?!?!?!
 
 equ <- subset(pc_br, Functional.group == "EQU")
 lm <- lm(FL016_ndvi ~ percent.cover, data = equ)
@@ -585,6 +585,86 @@ plot(FL016_ndvi ~ percent.cover,
      pch = 19, 
      col = "darkgreen")
 abline(lm)
+
+
+########### point intercept data ########### 
+pt_int <- na.omit(read.csv("pt_intercept.csv"))
+
+treatments$plot = gsub("P", "", treatments$plot) ## remove all P from plots
+pt_int2 <- merge(treatments, pt_int, by = c("plot"))
+
+point_CT <- subset(pt_int2, treatment == "CT")
+point_GR <- subset(pt_int2, treatment == "GR")
+point_SH <- subset(pt_int2, treatment == "SH")
+point_GS <- subset(pt_int2, treatment == "GS")
+
+## control ##
+par(xpd = T, mar = par()$mar + c(0,0,0,9))
+barplot(percent_composition ~ functional_groups + plot,
+        data = point_CT,
+        xlab = "Plot", 
+        ylab = "Percent Cover",
+        ylim = c(0, 120),
+        las = 2,
+        cex.names = 0.85,
+        col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+title("Percent Cover by Functional Group (Control)", adj = 0.05, line = 1.5)
+legend(11, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+                  "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
+       fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"), cex = 0.75)
+
+## grass ##
+barplot(percent_composition ~ functional_groups + plot,
+        data = point_GR,
+        xlab = "Plot", 
+        ylab = "Percent Cover",
+        ylim = c(0, 120),
+        las = 2,
+        cex.names = 0.85,
+        col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+title("Percent Cover by Functional Group (Grass Treatment)", adj = 0.05, line = 1.5)
+legend(11, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+                  "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
+       fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"), cex = 0.75)
+
+## shrubs ##
+barplot(percent_composition ~ functional_groups + plot,
+        data = point_SH,
+        xlab = "Plot", 
+        ylab = "Percent Cover",
+        ylim = c(0, 120), 
+        las = 2,
+        cex.names = 0.75,
+        col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+title("Percent Cover by Functional Group (Shrub Treatment)", adj = 0.05, line = 1.5)
+legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+                    "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
+       fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+
+## grass and shrubs ##
+barplot(percent.cover ~ Functional.group + plot,
+        data = pc_GS,
+        xlab = "Plot", 
+        ylab = "Percent Cover",
+        ylim = c(0, 120), 
+        las = 2,
+        cex.names = 0.75,
+        col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+title("Percent Cover by Functional Group (Grass+Shrub Treatment)", adj = 0.05, line = 1.5)
+legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+                    "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
+       fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
+                "purple", "pink", "brown"))
+
+
+
 
 
 
