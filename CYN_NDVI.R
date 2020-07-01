@@ -283,7 +283,7 @@ hist(difference,
 
 
 
-###### biomass removal vs ndvi difference #######
+########### biomass removal vs ndvi difference #######
 
 bio_removal <- na.omit(read.csv("CYN_bio_removal.csv"))
 names(bio_removal)[names(bio_removal) == "Plot.ID"] <- "plot"
@@ -319,7 +319,7 @@ abline(lm)
 
 
 
-######### percent cover #########
+########### percent cover #########
 percent_cover <- na.omit(read.csv("percent_cover.csv"))
 names(percent_cover)[names(percent_cover) == "Plot.ID"] <- "plot"
 
@@ -417,7 +417,7 @@ legend(50, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", 
 
 
 
-######## subset percent cover by funtional group ########
+########### subset percent cover by funtional group ########
 con <- subset(percent_cover, Functional.group == "CON")
 evsh <- subset(percent_cover, Functional.group == "EVSH")
 desh <- subset(percent_cover, Functional.group == "DESH")
@@ -833,7 +833,7 @@ abline(lm)
 
 
 
-
+###############
 
 
 
