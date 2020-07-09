@@ -429,7 +429,7 @@ equ <- subset(percent_cover, Functional.group == "EQU")
 
 
 ### does change in NDVI correlate with veg type (ie does NDVI inc/dec with specific veg types)
-pc_br <- merge(percent_cover, ndvi, by = c("plot"))
+pc_br <- merge(percent_cover, ndvi, by = c("plot")) ## merging percent cover with NDVI
 
 con <- subset(pc_br, Functional.group == "CON")
 lm <- lm(FL016_ndvi ~ percent.cover, data = con)
@@ -488,6 +488,7 @@ plot(FL016_ndvi ~ percent.cover,
 abline(lm)
 
 
+
 forb <- subset(pc_br, Functional.group == "FORB")
 lm <- lm(FL016_ndvi ~ percent.cover, data = forb)
 summary(lm)
@@ -500,6 +501,7 @@ plot(FL016_ndvi ~ percent.cover,
      pch = 19, 
      col = "darkgreen")
 abline(lm)
+
 
 
 cwd <- subset(pc_br, Functional.group == "CWD")
@@ -516,6 +518,7 @@ plot(FL016_ndvi ~ percent.cover,
 abline(lm)
 
 
+
 moss <- subset(pc_br, Functional.group == "MOSS")
 lm <- lm(FL016_ndvi ~ percent.cover, data = moss)
 summary(lm)
@@ -530,6 +533,7 @@ plot(FL016_ndvi ~ percent.cover,
 abline(lm)
 
 
+
 lich <- subset(pc_br, Functional.group == "LICH")
 lm <- lm(FL016_ndvi ~ percent.cover, data = lich)
 summary(lm)
@@ -542,6 +546,7 @@ plot(FL016_ndvi ~ percent.cover,
      pch = 19, 
      col = "darkgreen")
 abline(lm)
+
 
 
 brg <- subset(pc_br, Functional.group == "BRG") ### irrelevant bc all plots have 0% cover for brg
@@ -561,6 +566,7 @@ abline(lm)
 ##  'a' and 'b' must be finite
 
 
+
 litr <- subset(pc_br, Functional.group == "LITR")
 lm <- lm(FL016_ndvi ~ percent.cover, data = litr)
 summary(lm)
@@ -574,6 +580,8 @@ plot(FL016_ndvi ~ percent.cover,
      col = "darkgreen")
 abline(lm)
 ### statistically significant?!?!?!
+
+
 
 equ <- subset(pc_br, Functional.group == "EQU")
 lm <- lm(FL016_ndvi ~ percent.cover, data = equ)
@@ -593,11 +601,8 @@ abline(lm)
 
 
 
-
-
-
 ########### point intercept data ########### 
-## more accurate, all add up to 100%
+## more accurate, all add up to 100% BUT missing some functional groups
 pt_int <- na.omit(read.csv("pt_intercept.csv"))
 
 treatments$plot = gsub("P", "", treatments$plot) ## remove all P from plots
@@ -609,6 +614,7 @@ point_SH <- subset(pt_int2, treatment == "SH")
 point_GS <- subset(pt_int2, treatment == "GS")
 
 ## control ##
+dev.off()
 par(xpd = T, mar = par()$mar + c(0,0,0,9))
 barplot(percent_composition ~ functional_groups + plot,
         data = point_CT,
@@ -706,6 +712,7 @@ plot(FL016_ndvi ~ percent_composition,
 abline(lm)
 
 
+
 ev <- subset(point_ndvi, functional_groups == "EVSH")
 lm <- lm(FL016_ndvi ~ percent_composition, data = ev)
 summary(lm)
@@ -718,6 +725,7 @@ plot(FL016_ndvi ~ percent_composition,
      pch = 19, 
      col = "darkgreen")
 abline(lm)
+
 
 
 desh <- subset(point_ndvi, functional_groups == "DESH")
@@ -735,6 +743,7 @@ abline(lm)
 
 
 
+
 gram <- subset(point_ndvi, functional_groups == "GRAM")
 lm <- lm(FL016_ndvi ~ percent_composition, data = gram)
 summary(lm)
@@ -747,6 +756,7 @@ plot(FL016_ndvi ~ percent_composition,
      pch = 19, 
      col = "darkgreen")
 abline(lm)
+
 
 
 forb <-subset(point_ndvi, functional_groups == "FORB")
@@ -763,6 +773,7 @@ plot(FL016_ndvi ~ percent_composition,
 abline(lm)
 
 
+
 cwd <- subset(point_ndvi, functional_groups == "CWD")
 lm <- lm(FL016_ndvi ~ percent_composition, data = cwd)
 summary(lm)
@@ -776,7 +787,9 @@ plot(FL016_ndvi ~ percent_composition,
      col = "darkgreen")
 abline(lm)
 
+
 #### skipped moss, no moss in point intercept data
+
 
 lich <- subset(point_ndvi, functional_groups == "LICH")
 lm <- lm(FL016_ndvi ~ percent_composition, data = lich)
@@ -790,6 +803,7 @@ plot(FL016_ndvi ~ percent_composition,
      pch = 19, 
      col = "darkgreen")
 abline(lm)
+
 
 
 brg <- subset(point_ndvi, functional_groups == "BRG") ### irrelevant bc all plots have 0% cover for brg
@@ -811,6 +825,7 @@ abline(lm)
 
 ## no litter in point intercept data
 ## very confused ##
+
 
 equ <- subset(point_ndvi, functional_groups == "EQU")
 lm <- lm(FL016_ndvi ~ percent_composition, data = equ)
