@@ -338,9 +338,10 @@ ndvi_GR$plot = gsub("P", "",ndvi_GR$plot)
 ndvi_GS$plot = gsub("P", "",ndvi_GS$plot)
 ndvi_SH$plot = gsub("P", "",ndvi_SH$plot)
 
-ndviGR <- merge(ndvi_GR, pc_GR, by = c("plot"))
-ndviGR <- merge(ndvi_GR, pc_GR, by = c("plot"))
-ndviGR <- merge(ndvi_GR, pc_GR, by = c("plot"))
+## merge ndvi data with pc data (not sure if this is necessary)
+ndviGR <- merge(ndvi_GR, pc_GR, by = c("plot")) 
+ndviSH <- merge(ndvi_SH, pc_SH, by = c("plot"))
+ndviGS <- merge(ndvi_GS, pc_GS, by = c("plot"))
 
 
 
@@ -351,19 +352,18 @@ barplot(percent.cover ~ Functional.group + plot,
         ylab = "Percent Cover",
         ylim = c(0, 120),
         las = 2,
-        space = 2,
         cex.names = 0.85,
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
 title("Percent Cover by Functional Group (Grass Treatment)", adj = 0.05, line = 1.5)
-legend(11, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+legend(10, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                      "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"), cex = 0.75)
 
 
 barplot(percent.cover ~ Functional.group + plot,
-        data = pc_SH,
+        data = ndviSH,
         xlab = "Plot", 
         ylab = "Percent Cover",
         ylim = c(0, 120), 
@@ -372,13 +372,13 @@ barplot(percent.cover ~ Functional.group + plot,
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
 title("Percent Cover by Functional Group (Shrub Treatment)", adj = 0.05, line = 1.5)
-legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+legend(10, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                   "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
 
 barplot(percent.cover ~ Functional.group + plot,
-        data = pc_GS,
+        data = ndviGS,
         xlab = "Plot", 
         ylab = "Percent Cover",
         ylim = c(0, 120), 
@@ -387,7 +387,7 @@ barplot(percent.cover ~ Functional.group + plot,
         col = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
 title("Percent Cover by Functional Group (Grass+Shrub Treatment)", adj = 0.05, line = 1.5)
-legend(12.5, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
+legend(10, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", "forb", 
                   "coarse woody debris", "lichen", "bare ground", "litter", "Equisetum spp"), 
        fill = c("red", "orange", "yellow", "lightgreen", "darkgreen", "lightblue", "darkblue", 
                 "purple", "pink", "brown"))
@@ -427,7 +427,6 @@ brg <- subset(percent_cover, Functional.group == "BRG")
 litr <- subset(percent_cover, Functional.group == "LITR")
 equ <- subset(percent_cover, Functional.group == "EQU")
 
-ndvi_con <- merge(ndvi, con, by = c("plot"))
 
 ### does change in NDVI correlate with veg type (ie does NDVI inc/dec with specific veg types)
 pc_br <- merge(percent_cover, ndvi, by = c("plot"))
