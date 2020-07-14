@@ -337,7 +337,7 @@ summary(lm)
 lm<- lm(bio_removed ~ ndvi_diff, data = GS)
 summary(lm)
 
-
+## plot of biomass removed vs ndvi by treatmend (colored) ##
 plot(bio_removed ~ ndvi_diff, 
      data = GR, 
      ylim = c(0, 500),
@@ -357,11 +357,31 @@ points(bio_removed ~ ndvi_diff,
 legend("topleft", c("grass removed", "shrub removed", "grass & shrub removed"),
        fill = c("green", "red", "purple"))
 
-install.packages("nlme")
+install.packages("nlme") ## to conduct linear regressions by treatment
 library(nlme)
 
 lm2<- lmList(bio_removed ~ ndvi_diff| treatment, data=ndvi_br)
 summary(lm2)
+
+## RESULTS
+# Call:
+#        Model: bio_removed ~ ndvi_diff | treatment 
+# Data: ndvi_br 
+#
+# Coefficients:
+#        (Intercept) 
+# Estimate Std. Error   t value     Pr(>|t|)
+# GR  68.50606   69.32658 0.9881644 3.387450e-01
+# GS 612.50933   80.94682 7.5668118 1.697496e-06
+# SH 289.18850   98.15059 2.9463756 1.000686e-02
+# ndvi_diff 
+# Estimate Std. Error   t value     Pr(>|t|)
+# GR  50.82394   111.4266 0.4561204 0.6548376393
+# GS 676.27438   147.8367 4.5744697 0.0003650124
+# SH 177.81872   143.5102 1.2390668 0.2343593525
+#
+# Residual standard error: 58.08251 on 15 degrees of freedom
+
 
 
 ########### percent cover #########
