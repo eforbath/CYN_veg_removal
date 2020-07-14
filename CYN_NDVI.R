@@ -323,6 +323,28 @@ plot(bio_removed ~ ndvi_diff, data = ndvi_br,
 abline(lm)
 
 
+## biomass removal by treatment ##
+GR <- subset(ndvi_br, treatment == "GR")
+SH <- subset(ndvi_br, treatment == "SH")
+GS <- subset(ndvi_br, treatment == "GS")
+
+
+plot(bio_removed ~ ndvi_diff, 
+     data = GR, 
+     xlab = "NDVI Difference", 
+     ylab = "Biomass Removed (g)", 
+     main = "NDVI Difference vs Biomass Removed", 
+     pch = 19, 
+     col = "green")
+points(bio_removed ~ ndvi_diff, 
+       data = SH, 
+       pch = 19, 
+       col = "red")
+points(bio_removed ~ ndvi_diff, 
+       data = GS, 
+       pch = 19, 
+       col = "red")
+legend()
 
 
 ########### percent cover #########
