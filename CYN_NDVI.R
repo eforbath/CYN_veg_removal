@@ -328,6 +328,15 @@ GR <- subset(ndvi_br, treatment == "GR")
 SH <- subset(ndvi_br, treatment == "SH")
 GS <- subset(ndvi_br, treatment == "GS")
 
+lm<- lm(bio_removed ~ ndvi_diff, data = GR)
+summary(lm)
+
+lm<- lm(bio_removed ~ ndvi_diff, data = SH)
+summary(lm)
+
+lm<- lm(bio_removed ~ ndvi_diff, data = GS)
+summary(lm)
+
 
 plot(bio_removed ~ ndvi_diff, 
      data = GR, 
