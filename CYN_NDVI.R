@@ -222,13 +222,22 @@ summary(lm)
 aov <- aov(FL016_ndvi ~ treatment, data = ndvi) 
 summary(aov)
 
-
+plot(FL016_ndvi ~ treatment, 
+     data = ndvi, 
+     xlab = "Treatment", 
+     ylab = "NDVI", 
+     main = "Pre-Clipping NDVI by Treatment")
 
 lm <- lm(FL020_ndvi ~ treatment, data = ndvi)
 summary(lm)
 aov <- aov(FL020_ndvi ~ treatment, data = ndvi)
 summary(aov)
 
+plot(FL020_ndvi ~ treatment, 
+     data = ndvi, 
+     xlab = "Treatment", 
+     ylab = "NDVI",
+     main = "Post-Clipping NDVI by Treatment")
 
 ## subtract pre- and post- & linear regression 
 ndvi$ndvi_diff <- (ndvi$FL020_ndvi - ndvi$FL016_ndvi)
@@ -396,6 +405,7 @@ legend(10, 100, c("conifer", "evergreen shrub", "deciduous shurb", "Graminoid", 
 
 
 ########### bar plot with all plots and percent cover ###########  
+dev.off()
 par(xpd = T, mar = par()$mar + c(0,0,0,10))
 barplot(percent.cover ~ Functional.group + plot,
         data = percent_cover,
