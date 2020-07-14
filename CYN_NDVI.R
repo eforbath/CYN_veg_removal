@@ -331,6 +331,7 @@ GS <- subset(ndvi_br, treatment == "GS")
 
 plot(bio_removed ~ ndvi_diff, 
      data = GR, 
+     ylim = c(0, 500),
      xlab = "NDVI Difference", 
      ylab = "Biomass Removed (g)", 
      main = "NDVI Difference vs Biomass Removed", 
@@ -343,8 +344,15 @@ points(bio_removed ~ ndvi_diff,
 points(bio_removed ~ ndvi_diff, 
        data = GS, 
        pch = 19, 
-       col = "red")
-legend()
+       col = "purple")
+legend("topleft", c("grass removed", "shrub removed", "grass & shrub removed"),
+       fill = c("green", "red", "purple"))
+
+install.packages("nlme")
+library(nlme)
+
+lm2<- lmList(bio_removed ~ ndvi_diff| treatment, data=ndvi_br)
+summary(lm2)
 
 
 ########### percent cover #########
