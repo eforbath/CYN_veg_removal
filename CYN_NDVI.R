@@ -103,7 +103,6 @@ plot(FL020b,
 points(GPS_order$longitude, GPS_order$latitude, pch=20)
 
 ## combine pre- and post-clipping data frames by lat and long
-
 ndvi <- merge(ndvi_FL016b, ndvi_FL020b, by = c("longitude", "latitude")) ## just pre- and post-
 
 ndvi_plots <- merge(ndvi, GPS, by = c("longitude", "latitude"))## add GPS points
@@ -384,7 +383,82 @@ summary(lm2)
 
 
 
-########### percent cover #########
+
+
+
+############ percent cover ############
+
+## copy of all code reading necessary data in for these oercent cover analyses ##
+##projecting rasters
+FL016 <- raster("CYN_TR1_FL016M/RU_CYN_TR1_FL016B_index_ndvi.tif")
+FL016b <- projectRaster(FL016, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
+                        method = "bilinear", 
+                        alignOnly = FALSE)
+
+
+FL020 <- raster("CYN_TR1_FL020M/NDVI.data.tif")
+FL020b <- projectRaster(FL020, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs", 
+                        method = "bilinear", 
+                        alignOnly = FALSE)
+
+##reading GPS coordinates
+GPS <- na.omit(read.csv("CYN_plot_centers.csv"))
+GPS2 <- subset(GPS, select= -c(plot, elevation))
+
+## re order columns so longitude is first
+GPS_order <- GPS2[,c("longitude", "latitude")]
+
+## turn into spatial points
+GPS_order2 <- SpatialPoints(GPS_order,
+                            proj4string = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
+
+## actually extract NDVI values from each flight 
+ndvi_FL016 <- extract(FL016b, GPS_order2,
+                      buffer = 0.25,
+                      fun = mean,
+                      df = TRUE, 
+                      along = TRUE, 
+                      sp = TRUE)
+names(ndvi_FL016)[names(ndvi_FL016) == "RU_CYN_TR1_FL016B_index_ndvi"] <- "FL016_ndvi"
+ndvi_FL016b <- as.data.frame(ndvi_FL016)
+
+
+ndvi_FL020 <- extract(FL020b, 
+                      GPS_order2,
+                      buffer = 0.25,
+                      fun = mean,
+                      df = TRUE,
+                      along = TRUE,
+                      sp = TRUE)
+names(ndvi_FL020)[names(ndvi_FL020) == "NDVI.data"] <- "FL020_ndvi"
+ndvi_FL020b <- as.data.frame(ndvi_FL020)
+
+## combine pre- and post-clipping data frames by lat and long
+ndvi <- merge(ndvi_FL016b, ndvi_FL020b, by = c("longitude", "latitude")) ## just pre- and post-
+
+ndvi_plots <- merge(ndvi, GPS, by = c("longitude", "latitude"))## add GPS points
+
+
+## rearrage column orders for ease of reading
+ndvi_plots2 <- ndvi_plots[,c("plot", "longitude", "latitude", "elevation", "FL016_ndvi", "FL020_ndvi")]
+
+## add treatments to table
+treatments <- read.csv("treatments.csv")
+treatments 
+
+ndvi <- merge(ndvi_plots2, treatments, by = "plot")
+ndvi
+
+
+## plot by treatment (separate plots)
+ndvi_CT <- subset(ndvi, treatment == "CT")
+ndvi_GR <- subset(ndvi, treatment == "GR")
+ndvi_SH <- subset(ndvi, treatment == "SH")
+ndvi_GS <- subset(ndvi, treatment == "GS")
+
+
+## reading percent cover data in ##
+
 percent_cover <- na.omit(read.csv("percent_cover.csv"))
 names(percent_cover)[names(percent_cover) == "Plot.ID"] <- "plot"
 
@@ -406,7 +480,7 @@ ndvi_GR$plot = gsub("P", "",ndvi_GR$plot)
 ndvi_GS$plot = gsub("P", "",ndvi_GS$plot)
 ndvi_SH$plot = gsub("P", "",ndvi_SH$plot)
 
-## merge ndvi data with pc data (not sure if this is necessary)
+## merge ndvi data with pc data 
 ndviGR <- merge(ndvi_GR, pc_GR, by = c("plot")) 
 ndviSH <- merge(ndvi_SH, pc_SH, by = c("plot"))
 ndviGS <- merge(ndvi_GS, pc_GS, by = c("plot"))
