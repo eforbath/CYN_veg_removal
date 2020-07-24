@@ -1,7 +1,7 @@
 ########### Cherkskiy North Veg Removal Plots ###########
 
 getwd()
-setwd("/Users/elenaforbath/Downloads/loranty_lab/data")
+setwd("/Users/elenaforbath/Downloads/loranty_lab/CYN_veg_removal_data")
 
 install.packages("dplyr")
 install.packages("ggplot2")
@@ -24,18 +24,19 @@ library(rgdal)
 
 ## read in tiff file and create raster plots
 FL016 <- raster("CYN_TR1_FL016M/RU_CYN_TR1_FL016B_index_ndvi.tif")
-FL016b <- projectRaster(FL016, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
+FL016b <- projectRaster(FL016, crs = "+proj=aea +lat_1=50 +lat_2=70 +lat_0=56 +lon_0=100 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",
                         method = "bilinear", 
                         alignOnly = FALSE)
+writeRaster(FL016b, "FL016.tiff")
+
 FL016b
 plot(FL016b)
 
-FL020 <- raster("CYN_TR1_FL020M/NDVI.data.tif")
-FL020b <- projectRaster(FL020, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs", 
-                        method = "bilinear", 
-                        alignOnly = FALSE)
-FL020b
-plot(FL020b)
+FL020 <- raster("CYN_TR1_FL020M/RU_CYN_TR1_FL020M_index_ndvi.tif")
+FL020
+plot(FL020)
+
+writeRaster(FL020, "FL020.tiff")
 
 
 ## histogram of pre/post NDVI values (overlapping values)
@@ -44,19 +45,20 @@ c1 <- rgb(173,216,230,max = 255, alpha = 80, names = "lt.blue")
 c2 <- rgb(255,192,203, max = 255, alpha = 80, names = "lt.pink")
 
 jpeg("ndvi_hist.jpg")
-hist(FL016b,
+hist(FL016,
      main = "Histogram of NDVI Values",
      xlab = "NDVI",
      ylab = "Frequency",
      xlim = c(-0.5, 1),
      ylim = c(0, 20000),
      col = c1)
-hist(FL020b, col = c2, add = TRUE)
+hist(FL020, col = c2, add = TRUE)
 legend("top", legend = c("pre-clipping", "post-clipping"), fill = c(c1, c2))
 dev.off()
 
 ## extracting values from GPS points
 GPS <- na.omit(read.csv("CYN_plot_centers.csv"))
+GPS$ID <- c(1:29) ## add ID number so it can be merged later with plot numbers
 
 GPS2 <- subset(GPS, select= -c(plot, elevation))
 
@@ -66,10 +68,13 @@ GPS_order <- GPS2[,c("longitude", "latitude")]
 ## turn into spatial points
 GPS_order2 <- SpatialPoints(GPS_order,
                             proj4string = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
+CRS.new <- CRS("+proj=aea +lat_1=50 +lat_2=70 +lat_0=56 +lon_0=100 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0")
+GPS_final<- spTransform(GPS_order2, CRS.new)
+
 
 ## actually extract NDVI values from each flight 
-ndvi_FL016 <- extract(FL016b, GPS_order2,
-                      buffer = 0.25,
+ndvi_FL016 <- extract(FL016b, GPS_final,
+                      buffer = 0.50,
                       fun = mean,
                       df = TRUE, 
                       along = TRUE, 
@@ -79,13 +84,13 @@ ndvi_FL016b <- as.data.frame(ndvi_FL016)
 
 
 ndvi_FL020 <- extract(FL020b, 
-                      GPS_order2,
+                      GPS_final,
                       buffer = 0.25,
                       fun = mean,
                       df = TRUE,
                       along = TRUE,
                       sp = TRUE)
-names(ndvi_FL020)[names(ndvi_FL020) == "NDVI.data"] <- "FL020_ndvi"
+names(ndvi_FL020)[names(ndvi_FL020) == "RU_CYN_TR1_FL020M_index_ndvi"] <- "FL020_ndvi"
 ndvi_FL020b <- as.data.frame(ndvi_FL020)
 
 
@@ -96,7 +101,7 @@ plot(FL016b,
      ylab = "Latitude")
 points(GPS_order$longitude, GPS_order$latitude, pch=20)
 
-plot(FL020b, 
+plot(FL020, 
      main = "Post-Clipping NDVI", 
      xlab = "Longitude", 
      ylab = "Latitude")
@@ -104,12 +109,12 @@ points(GPS_order$longitude, GPS_order$latitude, pch=20)
 
 ## combine pre- and post-clipping data frames by lat and long
 ndvi <- merge(ndvi_FL016b, ndvi_FL020b, by = c("longitude", "latitude")) ## just pre- and post-
+ndvi$ID <- c(1:29)
 
-ndvi_plots <- merge(ndvi, GPS, by = c("longitude", "latitude"))## add GPS points
-
+ndvi_plots <- merge(ndvi, GPS, by = c("ID"))## add GPS points
 
 ## rearrage column orders for ease of reading
-ndvi_plots2 <- ndvi_plots[,c("plot", "longitude", "latitude", "elevation", "FL016_ndvi", "FL020_ndvi")]
+ndvi_plots2 <- ndvi_plots[,c("plot", "longitude.x", "latitude.x", "elevation", "FL016_ndvi", "FL020_ndvi")]
 
 
 ## plotting NDVI changes (all plots)
@@ -364,98 +369,27 @@ summary(lm2)
 
 ## RESULTS
 # Call:
-#        Model: bio_removed ~ ndvi_diff | treatment 
-# Data: ndvi_br 
-#
-# Coefficients:
-#        (Intercept) 
-# Estimate Std. Error   t value     Pr(>|t|)
-# GR  68.50606   69.32658 0.9881644 3.387450e-01
-# GS 612.50933   80.94682 7.5668118 1.697496e-06
-# SH 289.18850   98.15059 2.9463756 1.000686e-02
-# ndvi_diff 
-# Estimate Std. Error   t value     Pr(>|t|)
-# GR  50.82394   111.4266 0.4561204 0.6548376393
-# GS 676.27438   147.8367 4.5744697 0.0003650124
-# SH 177.81872   143.5102 1.2390668 0.2343593525
-#
-# Residual standard error: 58.08251 on 15 degrees of freedom
+#Model: bio_removed ~ ndvi_diff | treatment 
+#Data: ndvi_br 
 
+#Coefficients:
+ #       (Intercept) 
+#Estimate Std. Error  t value     Pr(>|t|)
+#GR  42.78807   37.64208 1.136708 2.734943e-01
+#GS 251.84787   37.58913 6.700019 7.105289e-06
+#SH 165.54788   34.84718 4.750682 2.576736e-04
+#ndvi_diff 
+#Estimate Std. Error    t value  Pr(>|t|)
+#GR  -55.0825   251.5869 -0.2189402 0.8296478
+#GS -160.7613   221.3935 -0.7261336 0.4789350
+#SH -242.2221   409.1252 -0.5920490 0.5626362
 
+#Residual standard error: 89.32817 on 15 degrees of freedom
 
 
 
 
 ############ percent cover ############
-
-## copy of all code reading necessary data in for these oercent cover analyses ##
-##projecting rasters
-FL016 <- raster("CYN_TR1_FL016M/RU_CYN_TR1_FL016B_index_ndvi.tif")
-FL016b <- projectRaster(FL016, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
-                        method = "bilinear", 
-                        alignOnly = FALSE)
-
-
-FL020 <- raster("CYN_TR1_FL020M/NDVI.data.tif")
-FL020b <- projectRaster(FL020, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs", 
-                        method = "bilinear", 
-                        alignOnly = FALSE)
-
-##reading GPS coordinates
-GPS <- na.omit(read.csv("CYN_plot_centers.csv"))
-GPS2 <- subset(GPS, select= -c(plot, elevation))
-
-## re order columns so longitude is first
-GPS_order <- GPS2[,c("longitude", "latitude")]
-
-## turn into spatial points
-GPS_order2 <- SpatialPoints(GPS_order,
-                            proj4string = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
-
-## actually extract NDVI values from each flight 
-ndvi_FL016 <- extract(FL016b, GPS_order2,
-                      buffer = 0.25,
-                      fun = mean,
-                      df = TRUE, 
-                      along = TRUE, 
-                      sp = TRUE)
-names(ndvi_FL016)[names(ndvi_FL016) == "RU_CYN_TR1_FL016B_index_ndvi"] <- "FL016_ndvi"
-ndvi_FL016b <- as.data.frame(ndvi_FL016)
-
-
-ndvi_FL020 <- extract(FL020b, 
-                      GPS_order2,
-                      buffer = 0.25,
-                      fun = mean,
-                      df = TRUE,
-                      along = TRUE,
-                      sp = TRUE)
-names(ndvi_FL020)[names(ndvi_FL020) == "NDVI.data"] <- "FL020_ndvi"
-ndvi_FL020b <- as.data.frame(ndvi_FL020)
-
-## combine pre- and post-clipping data frames by lat and long
-ndvi <- merge(ndvi_FL016b, ndvi_FL020b, by = c("longitude", "latitude")) ## just pre- and post-
-
-ndvi_plots <- merge(ndvi, GPS, by = c("longitude", "latitude"))## add GPS points
-
-
-## rearrage column orders for ease of reading
-ndvi_plots2 <- ndvi_plots[,c("plot", "longitude", "latitude", "elevation", "FL016_ndvi", "FL020_ndvi")]
-
-## add treatments to table
-treatments <- read.csv("treatments.csv")
-treatments 
-
-ndvi <- merge(ndvi_plots2, treatments, by = "plot")
-ndvi
-
-
-## plot by treatment (separate plots)
-ndvi_CT <- subset(ndvi, treatment == "CT")
-ndvi_GR <- subset(ndvi, treatment == "GR")
-ndvi_SH <- subset(ndvi, treatment == "SH")
-ndvi_GS <- subset(ndvi, treatment == "GS")
-
 
 ## reading percent cover data in ##
 
