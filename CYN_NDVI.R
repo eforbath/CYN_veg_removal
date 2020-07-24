@@ -265,7 +265,7 @@ FL020_crop2 <- resample(FL020_crop, FL016b) ## needed to resample the plot to ch
 difference <- FL020_crop2 - FL016b
 
 ## plot and export difference raster
-jpeg("ndvi_diff.jpg")
+jpeg("ndvi_diff2.jpg")
 plot(difference, 
      main = "Raster of NDVI Difference (FL020 - FL016)", 
      xlab = "Longitude", 
@@ -325,6 +325,7 @@ anova(lm)
 plot(bio_removed ~ ndvi_diff, data = ndvi_br, 
      xlab = "NDVI Difference", 
      ylab = "Biomass Removed (g)", 
+     main = "Biomass Removed vs NDVI",
      pch = 19, 
      col = "red")
 abline(lm)
@@ -361,7 +362,7 @@ points(bio_removed ~ ndvi_diff,
        data = GS, 
        pch = 19, 
        col = "purple")
-legend("topleft", c("grass removed", "shrub removed", "grass & shrub removed"),
+legend("topright", c("grass removed", "shrub removed", "grass & shrub removed"),
        fill = c("green", "red", "purple"))
 
 install.packages("nlme") ## to conduct linear regressions by treatment
