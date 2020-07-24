@@ -1,7 +1,7 @@
 ########### Cherkskiy North Veg Removal Plots ###########
 
 getwd()
-setwd("/Users/elenaforbath/Downloads/loranty_lab/CYN_veg_removal_data")
+setwd("/Users/elenaforbath/Downloads/loranty_lab/CYN_veg_removal _data")
 
 install.packages("dplyr")
 install.packages("ggplot2")
@@ -23,7 +23,7 @@ library(rgdal)
 ########### NDVI analyses########### 
 
 ## read in tiff file and create raster plots
-FL016 <- raster("CYN_TR1_FL016M/RU_CYN_TR1_FL016B_index_ndvi.tif")
+FL016 <- raster("CYN_TR1_FL016M/RU_CYN_TR1_FL016B_GCP_index_ndvi.tif")
 FL016b <- projectRaster(FL016, crs = "+proj=aea +lat_1=50 +lat_2=70 +lat_0=56 +lon_0=100 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",
                         method = "bilinear", 
                         alignOnly = FALSE)
@@ -32,11 +32,14 @@ writeRaster(FL016b, "FL016.tiff")
 FL016b
 plot(FL016b)
 
-FL020 <- raster("CYN_TR1_FL020M/RU_CYN_TR1_FL020M_index_ndvi.tif")
-FL020
-plot(FL020)
+FL020 <- raster("CYN_TR1_FL020M/RU_CYN_TR1_FL020M_GCP_index_ndvi.tif")
+FL020b <- projectRaster(FL020, crs = "+proj=aea +lat_1=50 +lat_2=70 +lat_0=56 +lon_0=100 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",
+                        method = "bilinear", 
+                        alignOnly = FALSE)
+FL020b
+plot(FL020b)
 
-writeRaster(FL020, "FL020.tiff")
+writeRaster(FL020b, "FL020.tiff")
 
 
 ## histogram of pre/post NDVI values (overlapping values)
@@ -45,14 +48,14 @@ c1 <- rgb(173,216,230,max = 255, alpha = 80, names = "lt.blue")
 c2 <- rgb(255,192,203, max = 255, alpha = 80, names = "lt.pink")
 
 jpeg("ndvi_hist.jpg")
-hist(FL016,
+hist(FL016b,
      main = "Histogram of NDVI Values",
      xlab = "NDVI",
      ylab = "Frequency",
      xlim = c(-0.5, 1),
      ylim = c(0, 20000),
      col = c1)
-hist(FL020, col = c2, add = TRUE)
+hist(FL020b, col = c2, add = TRUE)
 legend("top", legend = c("pre-clipping", "post-clipping"), fill = c(c1, c2))
 dev.off()
 
@@ -79,18 +82,18 @@ ndvi_FL016 <- extract(FL016b, GPS_final,
                       df = TRUE, 
                       along = TRUE, 
                       sp = TRUE)
-names(ndvi_FL016)[names(ndvi_FL016) == "RU_CYN_TR1_FL016B_index_ndvi"] <- "FL016_ndvi"
+names(ndvi_FL016)[names(ndvi_FL016) == "RU_CYN_TR1_FL016B_GCP_index_ndvi"] <- "FL016_ndvi"
 ndvi_FL016b <- as.data.frame(ndvi_FL016)
 
 
 ndvi_FL020 <- extract(FL020b, 
                       GPS_final,
-                      buffer = 0.25,
+                      buffer = 0.50,
                       fun = mean,
                       df = TRUE,
                       along = TRUE,
                       sp = TRUE)
-names(ndvi_FL020)[names(ndvi_FL020) == "RU_CYN_TR1_FL020M_index_ndvi"] <- "FL020_ndvi"
+names(ndvi_FL020)[names(ndvi_FL020) == "RU_CYN_TR1_FL020M_GCP_index_ndvi"] <- "FL020_ndvi"
 ndvi_FL020b <- as.data.frame(ndvi_FL020)
 
 
@@ -99,13 +102,13 @@ plot(FL016b,
      main = "Pre-Clipping NDVI", 
      xlab = "Longitude", 
      ylab = "Latitude")
-points(GPS_order$longitude, GPS_order$latitude, pch=20)
+points(ndvi_FL016b$longitude, ndvi_FL016b$latitude, pch=20)
 
-plot(FL020, 
+plot(FL020b, 
      main = "Post-Clipping NDVI", 
      xlab = "Longitude", 
      ylab = "Latitude")
-points(GPS_order$longitude, GPS_order$latitude, pch=20)
+points(ndvi_FL020b$longitude, ndvi_FL020b$latitude, pch=20)
 
 ## combine pre- and post-clipping data frames by lat and long
 ndvi <- merge(ndvi_FL016b, ndvi_FL020b, by = c("longitude", "latitude")) ## just pre- and post-
@@ -149,7 +152,7 @@ ndvi_GS <- subset(ndvi, treatment == "GS")
 
 ## control ##
 
-jpeg("barplot_control.jpg")
+jpeg("barplot_control2.jpg")
 barplot(cbind(FL016_ndvi, FL020_ndvi) ~ plot, 
         ndvi_CT,
         beside = TRUE,
@@ -166,7 +169,7 @@ legend("topright",
 dev.off()
 
 ## grass ##
-jpeg("barplot_grass.jpg")
+jpeg("barplot_grass2.jpg")
 barplot(cbind(FL016_ndvi, FL020_ndvi) ~ plot, 
         ndvi_GR,
         beside = TRUE,
@@ -183,7 +186,7 @@ legend("topright",
 dev.off()
 
 ## shrub ##
-jpeg("barplot_shrub.jpg")
+jpeg("barplot_shrub2.jpg")
 barplot(cbind(FL016_ndvi, FL020_ndvi) ~ plot, 
         ndvi_SH,
         beside = TRUE,
@@ -201,7 +204,7 @@ dev.off()
 
 
 ## grass and shrub ##
-jpeg("barplot_both.jpg")
+jpeg("barplot_both2.jpg")
 barplot(cbind(FL016_ndvi, FL020_ndvi) ~ plot, 
         ndvi_GS,
         beside = TRUE,
