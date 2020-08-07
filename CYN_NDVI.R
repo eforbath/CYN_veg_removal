@@ -22,7 +22,7 @@ library(rgdal)
 
 ########### NDVI analyses########### 
 
-## read in tiff file and create raster plots
+## read in tiff file and create raster plots ONLY DO THIS ONCE
 FL016 <- raster("CYN_TR1_FL016M/RU_CYN_TR1_FL016B_GCP_index_ndvi.tif")
 FL016b <- projectRaster(FL016, crs = "+proj=aea +lat_1=50 +lat_2=70 +lat_0=56 +lon_0=100 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",
                         method = "bilinear", 
@@ -41,6 +41,9 @@ plot(FL020b)
 
 writeRaster(FL020b, "FL020.tiff")
 
+## read re-projected tiffs
+FL016 <- raster("FL016.tif")
+FL020 <- raster("FL020.tif")
 
 ## histogram of pre/post NDVI values (overlapping values)
 
@@ -86,14 +89,14 @@ names(ndvi_FL016)[names(ndvi_FL016) == "RU_CYN_TR1_FL016B_GCP_index_ndvi"] <- "F
 ndvi_FL016b <- as.data.frame(ndvi_FL016)
 
 
-ndvi_FL020 <- extract(FL020b, 
+ndvi_FL020 <- extract(FL020, 
                       GPS_final,
                       buffer = 0.50,
                       fun = mean,
                       df = TRUE,
                       along = TRUE,
                       sp = TRUE)
-names(ndvi_FL020)[names(ndvi_FL020) == "RU_CYN_TR1_FL020M_GCP_index_ndvi"] <- "FL020_ndvi"
+names(ndvi_FL020)[names(ndvi_FL020) == "FL020"] <- "FL020_ndvi"
 ndvi_FL020b <- as.data.frame(ndvi_FL020)
 
 
